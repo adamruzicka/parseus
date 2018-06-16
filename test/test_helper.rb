@@ -1,7 +1,7 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "parseus"
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+require 'parseus'
 
-require "minitest/autorun"
+require 'minitest/autorun'
 def parses_successfully(input, capture, remaining)
   result = parser.run(input)
   result.must_be(:success?)
@@ -13,4 +13,3 @@ def fails_to_parse(input)
   result = parser.run(input)
   result.must_be(:failure?)
 end
-

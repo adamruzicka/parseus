@@ -19,7 +19,8 @@ module Parseus
           end
 
           rule(:hexadecimal) do
-            digit | satisfy { |c| [('a'..'z'), ('A'..'Z')].any? { |group| group.include? c } }
+            letters = [('a'..'f'), ('A'..'F')]
+            digit | satisfy { |c| letters.any? { |group| group.cover? c } }
           end
         end
         uuid = 'e1f3ea83-6e14-400d-bb3c-0b5284bd3f2c'
@@ -31,4 +32,3 @@ module Parseus
     end
   end
 end
-

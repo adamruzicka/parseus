@@ -5,14 +5,13 @@ module Parseus
         Parser.new do |input|
           result = nil
           matched = []
-          rest = input
           loop do
-            result = parser.run(rest)
+            result = parser.run(input)
             if result.success?
               matched << result.result
-              rest = result.remaining
+              input = result.remaining
             else
-              result = ParseResult.success(matched, rest)
+              result = ParseResult.success(matched, input)
               break
             end
           end
@@ -53,7 +52,9 @@ module Parseus
         Parser.new do |input|
           left.run(input).on_success do |result|
             right.run(result.remaining).on_success do |right_result|
-              ParseResult.success(Array(result.result) << right_result.result, right_result.remaining)
+              partial = Array(result.result)
+              ParseResult.success(partial << right_result.result,
+                                  right_result.remaining)
             end
           end
         end
@@ -69,15 +70,14 @@ module Parseus
 
       def exactly(parser, count)
         Parser.new do |input|
-          rest = input
           matched = []
           count.times do
-            result = parser.run(rest)
+            result = parser.run(input)
             return result if result.failure?
             matched << result.result
-            rest = result.remaining
+            input = result.remaining
           end
-          ParseResult.success(matched, rest)
+          ParseResult.success(matched, input)
         end
       end
     end

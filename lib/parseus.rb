@@ -1,4 +1,4 @@
-require "parseus/version"
+require 'parseus/version'
 
 module Parseus
   require 'parseus/parse_result'

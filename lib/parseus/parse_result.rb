@@ -18,11 +18,11 @@ module Parseus
       end
 
       def on_success
-        success? ? yield self : self
+        success? ? yield(self) : self
       end
 
       def on_failure
-        failure? ? yield self : self
+        failure? ? yield(self) : self
       end
 
       def map

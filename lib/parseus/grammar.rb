@@ -7,12 +7,12 @@ module Parseus
     def initialize(&block)
       @rules = {}
       @root = nil
-      instance_eval &block if block_given?
+      instance_eval(&block) if block_given?
     end
 
-    def rule(name, &block)
+    def rule(name)
       @root ||= name
-      @rules[name] = Parser.new { |input| block.call.run(input) } if block_given?
+      @rules[name] = Parser.new { |input| yield.run(input) } if block_given?
       @rules[name]
     end
 

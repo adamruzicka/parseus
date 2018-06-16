@@ -1,8 +1,8 @@
-require "test_helper"
+require 'test_helper'
 
 module Parseus
   class ParserTest < Minitest::Test
-
+    # rubocop:disable Metrics/BlockLength
     describe Parser do
       describe 'unit' do
         let(:unit) { 'something' }
@@ -27,7 +27,7 @@ module Parseus
       end
 
       describe 'satisfy' do
-        let(:parser) { Parser.satisfy { |x| ('a'..'c').include? x } }
+        let(:parser) { Parser.satisfy { |x| ('a'..'c').cover? x } }
 
         it 'consumes single element from input if condition is met' do
           parses_successfully 'cb', 'c', 'b'
@@ -63,7 +63,7 @@ module Parseus
 
       describe 'map' do
         let(:inner) { Parser.digit }
-        let(:parser) { inner.map { |digit| digit.to_i }}
+        let(:parser) { inner.map(&:to_i) }
 
         it 'maps result of another parser' do
           parses_successfully '12', 1, '2'
@@ -78,5 +78,6 @@ module Parseus
         parses_successfully '1234abc', 1234, 'abc'
       end
     end
+    # rubocop:enable Metrics/BlockLength
   end
 end

@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 module Parseus
   class CombinatorTest < Minitest::Test
@@ -10,7 +10,7 @@ module Parseus
       end
 
       it 'parses on match' do
-        parses_successfully '1234abc', ['1', '2', '3', '4'], 'abc'
+        parses_successfully '1234abc', %w[1 2 3 4], 'abc'
       end
     end
 
@@ -18,7 +18,7 @@ module Parseus
       let(:parser) { Parser.digit.some }
 
       it 'parses on match' do
-        parses_successfully '123a', ['1', '2', '3'], 'a'
+        parses_successfully '123a', %w[1 2 3], 'a'
       end
 
       it 'does not parse on empty input' do
@@ -27,7 +27,10 @@ module Parseus
     end
 
     describe 'discard_*' do
-      let(:parser) { Parser.one_of(' ').many.discard_left(Parser.number).discard_right(Parser.one_of(' ').many) }
+      let(:parser) do
+        space = Parser.symbol(' ')
+        space.many < Parser.number > space.many
+      end
 
       it 'parses a number surrounded by whitespace' do
         parses_successfully '     15  ', 15, ''
@@ -38,7 +41,7 @@ module Parseus
       let(:parser) { Parser.letter.and_then Parser.digit }
 
       it 'parses a letter followed by a digit' do
-        parses_successfully 'a1', ['a', '1'], ''
+        parses_successfully 'a1', %w[a 1], ''
       end
     end
 
@@ -55,10 +58,12 @@ module Parseus
     end
 
     describe 'sequence' do
-      let(:parser) { Parser.sequence(Parser.letter, Parser.letter, Parser.letter) }
+      let(:parser) do
+        Parser.sequence(Parser.letter, Parser.letter, Parser.letter)
+      end
 
       it 'parses three characters' do
-        parses_successfully 'abc', ['a', 'b', 'c'], ''
+        parses_successfully 'abc', %w[a b c], ''
       end
     end
 

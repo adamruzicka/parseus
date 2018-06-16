@@ -23,7 +23,8 @@ module Parseus
             if yield result.result
               result
             else
-              msg = parser.failure_message || "'#{result.result}' does not satisfy the condition"
+              msg = parser.failure_message ||
+                    "'#{result.result}' does not satisfy the condition"
               ParseResult.failure(msg, result.remaining)
             end
           end
@@ -31,7 +32,9 @@ module Parseus
       end
 
       def letter
-        satisfy { |char| [('a'..'z'), ('A'..'Z')].any? { |range| range.include? char } }
+        satisfy do |char|
+          [('a'..'z'), ('A'..'Z')].any? { |range| range.include? char }
+        end
       end
 
       def symbol(symbol)
@@ -39,18 +42,17 @@ module Parseus
       end
 
       def digit
-        satisfy { |char| ('0'..'9').include? char }
+        satisfy { |char| ('0'..'9').cover? char }
       end
 
       def one_of(*options)
-        options = options.first.split('') if options.count == 1 && options.is_a?(String)
         satisfy { |char| options.include? char }
       end
 
       def map(other, &block)
         Parser.new do |input|
           other.run(input).on_success do |result|
-            result.map &block
+            result.map(&block)
           end
         end
       end
@@ -82,7 +84,8 @@ module Parseus
           if input.start_with? str
             ParseResult.success(str, input[str.length..-1])
           else
-            ParseResult.failure("'#{str}' expected, found '#{input[0..str.length - 1]}'", input)
+            msg = "'#{str}' expected, found '#{input[0..str.length - 1]}'"
+            ParseResult.failure msg, input
           end
         end
       end
