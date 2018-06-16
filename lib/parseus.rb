@@ -1,5 +1,7 @@
 require "parseus/version"
 
 module Parseus
-  # Your code goes here...
+  require 'parseus/parse_result'
+  require 'parseus/parser'
+  require 'parseus/grammar'
 end
