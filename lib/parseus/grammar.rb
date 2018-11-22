@@ -4,9 +4,10 @@ module Parseus
     include Parser::Combinator
 
     attr_reader :root
-    def initialize(&block)
+    def initialize(auto_tokenize: false, &block)
       @rules = {}
       @root = nil
+      @auto_tokenize = auto_tokenize
       instance_eval(&block) if block_given?
     end
 
@@ -16,12 +17,16 @@ module Parseus
       @rules[name]
     end
 
+    def root_rule
+      rule(root)
+    end
+
     def start(name)
       @root = name
     end
 
     def run(input)
-      rule(root).run(input)
+      root_rule.run(input)
     end
   end
 end
